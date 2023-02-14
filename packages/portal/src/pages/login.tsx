@@ -30,8 +30,6 @@ const Login = () => {
     // };
 
     const onFinish = async (values: any) => {
-        console.log(values);
-        
         if (!values.password || !values.email) {
            return toggleToast({
                 show: true,

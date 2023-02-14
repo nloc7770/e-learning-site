@@ -1,6 +1,7 @@
 import { supabaseClient } from "@/services/supabase"
 import { User } from "@supabase/supabase-js"
 import React, { useEffect, useMemo, useState } from 'react'
+import { useToast } from "@/context/toast";
 
 type State = {
     user: User | null
@@ -15,27 +16,40 @@ interface AuthProviderProps {
 const AuthContext = React.createContext<State | undefined>(undefined)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
+    const { toggleToast } = useToast();
     const [user, setUser] = useState<User | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    
-    useEffect(() => {
-        setLoading(true)
-        async function getUserData() {
-            await supabaseClient.auth.getUser().then((value) => {
-                if (value.data?.user) {
-                    setUser(value?.data?.user)
-                }
-            })
+    const [loading, setLoading] = useState<boolean>(true)
+    async function getUserData() {
+        let { data, error } = await supabaseClient.auth.getSession()
+        if (error) return toggleToast({
+            show: true,
+            status: "fail",
+            message: error?.message,
+            time: 5000,
+        });
+        if (data?.session?.user) {
+        setUser(data?.session?.user)
         }
+
+    }
+    useEffect(() => {
         getUserData();
+        // Check active sessions and sets the user
+        // Listen for changes on auth state (logged in, signed out, etc.)
+        const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            setUser(session?.user ?? null)
+        })
         setLoading(false)
+        return () => {
+            listener?.subscription?.unsubscribe()
+        }
     }, [])
 
     const isLogged = useMemo(() => {
         return !!user
     }, [user])
 
-    const logout = async() => {
+    const logout = async () => {
         await supabaseClient.auth.signOut();
     }
     return (
@@ -60,3 +74,4 @@ function useAuth() {
     return context
 }
 export { AuthProvider, useAuth }
+

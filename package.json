@@ -13,7 +13,6 @@
   "scripts": {
     "portal": "yarn workspace portal dev",
     "server": "yarn workspace server start",
-    "web": "yarn workspace web dev",
-    "start": "concurrently --kill-others-on-fail \"yarn server\"  \"yarn portal\" \"yarn web\""
+    "start": "concurrently --kill-others-on-fail \"yarn server\"  \"yarn portal\""
   }
 }

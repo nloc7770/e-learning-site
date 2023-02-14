@@ -1,4 +1,5 @@
 import { useAuth } from "@/context/auth";
+import { Spin } from "antd";
 import { useState } from "react";
 
 import { Navigate, Outlet, useLocation } from "react-router-dom";
@@ -20,7 +21,7 @@ export const PrivateRoute = () => {
   const [menu, setMenu] = useState<boolean>(false)
 
   let { user, loading } = useAuth();
-  
+
   //   const element = useRoutes([
   //     { path: "/", element: <Home /> },
   //     { path: "/calendar", element: <Calendar /> },
@@ -35,14 +36,13 @@ export const PrivateRoute = () => {
       }
     }
   })
-
-
   return (
-    user ? (
-      <div>
-        {/* <Header /> */}
-       <div className="flex w-full min-h-[calc(100vh-64px)] " {...handlers}>
-      {/* //     //         <Menu className="hidden lg:block" idLayout="default-menu" />
+    loading ? <Spin /> :
+      user ? (
+        <div>
+          {/* <Header /> */}
+          <div className="flex w-full min-h-[calc(100vh-64px)] " {...handlers}>
+            {/* //     //         <Menu className="hidden lg:block" idLayout="default-menu" />
       //     //           <AnimatePresence mode="wait" initial={false}>
       //     //             <div className="w-full bg-[#F7F7F7]">
       //     //               <motion.div
@@ -58,13 +58,13 @@ export const PrivateRoute = () => {
       //     //             </div>
       //     //           </AnimatePresence>
       //     //         </Suspense> */}
-                </div>
+          </div>
 
-      </div >
+        </div >
 
-    ) : (
-      <Navigate to="/login" />
-    )
+      ) : (
+        <Navigate to="/login" />
+      )
   )
 };
 

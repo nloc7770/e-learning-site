@@ -7,9 +7,10 @@ import { PrivateRoute, PublicRouter } from "./router/auth";
 
 function App() {
   return (
+    <ToastProvider>
+
     <AuthProvider>
       <BrowserRouter>
-        <ToastProvider>
         <AnimatePresence exitBeforeEnter>
           <Routes>
             <Route element={<PrivateRoute />} path="*" />
@@ -18,9 +19,9 @@ function App() {
             </Route>
           </Routes>
         </AnimatePresence>
-        </ToastProvider>
       </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </ToastProvider>
   )
 }
 
