@@ -1,22 +1,24 @@
 import { useAuth } from "@/context/auth";
-import { useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import axiosController from "@/api-client/base/controller";
 // import { CloseIcon, MenuIcon } from "@/components/icons";
 // import Menu from "../menu";
+import { CloseIcon, MenuIcon } from "@/components/icons";
 import { oapcityVariants } from "@/helper/farmer-motion";
+import { Popover, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
 import { useSwipeable } from "react-swipeable";
+import Menu from "../menu/menu";
 
 export let setMenu: any = () => { };
 
 const Header = () => {
     const navigate = useNavigate();
-    // const ref: any = useRef({});
+    const ref: any = useRef({});
     const { user, logout } = useAuth();
     const [show, setShow] = useState(false);
     setMenu = setShow;
-    // useOnClickOutside(ref, () => { if (show) setShow(false) })
     const onLogout = () => {
         logout()
     };
@@ -33,7 +35,7 @@ const Header = () => {
         },
     });
     return (
-        <div {...handlers} className={"border-b-[1px] border-silver bg-light-base bg-white text-slate-700 sticky w-full top-0 left-0 z-[50]"}>
+        <div {...handlers} className={"border-b-[1px] border-silver bg-light-base text-slate-700 sticky w-full top-0 left-0 z-[50]"}>
             <div className="absolute top-full left-0 ">
                 {show && (
                     <motion.div
@@ -46,15 +48,15 @@ const Header = () => {
                         onClick={() => setShow(false)}
                     ></motion.div>
                 )}
-                {/* <div className="transition duration-100 absolute top-0" style={{ transform: "translateX(" + x + ")" }} ref={ref}>
+                <div className="transition duration-100 absolute top-0" style={{ transform: "translateX(" + x + ")" }} ref={ref}>
                     <Menu className="lg:hidden block z-0 overflow-hidden" idLayout="mobilemenu" />
-                </div> */}
+                </div>
             </div>
-            <div className={"py-[12px] px-4 xl:px-[32px] w-full justify-between flex items-center "}>
+            <div className={"py-[12px] px-4 xl:px-[32px] w-screen justify-between flex items-center "}>
                 <div className="font-[500] text-xl">
                     <div className="flex items-center">
                         <div className="md:pr-2.5 pr-[0px] lg:hidden">
-                            {/* {!show && (
+                            {!show && (
                                 <MenuIcon
                                     onClick={() => {
                                         setShow(true);
@@ -69,13 +71,13 @@ const Header = () => {
                                     }}
                                     className="w-12 fill-gray"
                                 />
-                            )} */}
+                            )}
                         </div>
                         <img
                             onClick={() => {
                                 navigate("/");
                             }}
-                            className="md:h-[36px] h-[28px] xl:mr-3 cursor-pointer mb-2 md:mb-0"
+                            className="md:h-[36px] h-[28px]  cursor-pointer"
                             src="/images/logo.svg"
                             alt=""
                         />
@@ -85,8 +87,7 @@ const Header = () => {
                     <div className="profile items-center">
                         <div className="flex items-center ">
                             <div className="ml-2 flex items-center lg:ml-0">
-
-                                {/* <Popover className="relative">
+                                <Popover className="relative">
                                     {({ close }) => {
                                         return (
                                             <>
@@ -95,13 +96,10 @@ const Header = () => {
                                                 >
                                                     <img
                                                         className="border-[1px] rounded-full border-smoke md:mr-2 md:h-10 md:w-10 h-[35px] w-[35px] text-orange-300 fill-black transition ease-in-out duration-150 object-cover"
-                                                        src={profile.avatar || "/images/avatar-icon.png"}
+                                                        src={"/images/avatar-icon.png"}
                                                     />
                                                     <span className="hidden md:block body-2-highlight max-w-[13rem] truncate">
-                                                        {profile?.data?.first_name || " "} {profile?.data?.last_name || " "}
-                                                    </span>
-                                                    <span className="hidden md:block body-2-highlight max-w-[13rem] truncate">
-                                                        {profile?.data?.first_name && profile?.data?.first_name ? "" : profile?.data?.email}
+                                                        {user?.email}
                                                     </span>
                                                     <img src="/images/chevron-black-down.png" className="w-[24px] ml-[6px]"></img>
                                                 </Popover.Button>
@@ -118,21 +116,18 @@ const Header = () => {
                                                         <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                                             <div className=" bg-white p-[20px] min-w-[273px]">
                                                                 <span
-                                                                    // href="https://im-id.icanx.vn/"
-                                                                    // target="_blank"
                                                                     className="cursor-pointer flex items-center transition duration-150 ease-in-out rounded-lg focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                                                                 >
                                                                     <div className="flex items-center justify-center flex-shrink-0  sm:h-12 sm:w-12">
                                                                         <img
                                                                             className=" border-[1px] rounded-full border-smoke width-[40px] h-10 w-10 text-orange-300 fill-black transition ease-in-out duration-150"
-                                                                            src={profile.avatar || "/images/avatar-icon.png"}
+                                                                            src={"/images/avatar-icon.png"}
                                                                         />
                                                                     </div>
                                                                     <div className="ml-2">
                                                                         <p className="body-2-highlight text-gray-900 whitespace-nowrap ">
-                                                                            {profile?.data?.first_name || " "} {profile?.data?.last_name || " "}
+                                                                            {user?.email}
                                                                         </p>
-                                                                        <p className="text-black text-caption-1">{profile?.data?.email}</p>
                                                                     </div>
                                                                 </span>
                                                             </div>
@@ -149,7 +144,7 @@ const Header = () => {
                                             </>
                                         );
                                     }}
-                                </Popover> */}
+                                </Popover>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
-import { supabaseClient } from "@/services/supabase"
-import { User } from "@supabase/supabase-js"
-import React, { useEffect, useMemo, useState } from 'react'
 import { useToast } from "@/context/toast";
+import { supabaseClient } from "@/services/supabase";
+import { User } from "@supabase/supabase-js";
+import React, { useEffect, useMemo, useState } from 'react';
 
 type State = {
     user: User | null
@@ -28,7 +28,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             time: 5000,
         });
         if (data?.session?.user) {
-        setUser(data?.session?.user)
+            setUser(data?.session?.user)
         }
 
     }
@@ -73,5 +73,5 @@ function useAuth() {
     }
     return context
 }
-export { AuthProvider, useAuth }
+export { AuthProvider, useAuth };
 
