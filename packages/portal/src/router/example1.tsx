@@ -1,9 +1,9 @@
 import { AppRouter } from "@/types/Route";
 import React from "react";
 
-const examplePage = React.lazy(() => import("@/pages/example"));
-const exampleCreatePage = React.lazy(() => import("@/pages/example/create"));
-const exampleDetailPage = React.lazy(() => import("@/pages/example/detail"));
+const ExamplePage = React.lazy(() => import("@/pages/example1"));
+const ExampleCreatePage = React.lazy(() => import("@/pages/example1/create"));
+const ExampleDetailPage = React.lazy(() => import("@/pages/example1/detail"));
 
 export const EXAMPLE1: AppRouter = {
   INDEX: {
@@ -11,14 +11,14 @@ export const EXAMPLE1: AppRouter = {
     text: "Examples 1",
     showMenu: true,
     icon: "/images/toast/warning-toast.png",
-    element: examplePage,
+    element: <ExamplePage />,
     group: "Example",
   },
   CREATE: {
     path: "/examples-1/create",
     text: "Examples 1 create",
     showMenu: false,
-    element: exampleCreatePage,
+    element: <ExampleCreatePage />,
     group: "Example",
   },
   DETAIL: {
@@ -26,7 +26,7 @@ export const EXAMPLE1: AppRouter = {
     text: "Examples 1 detail",
     showMenu: false,
     group: "Example",
-    element: exampleDetailPage,
+    element: <ExampleDetailPage />,
   },
 };
 const EXAMPLE1_ROUTES = Object.values(EXAMPLE1);

@@ -1,9 +1,9 @@
 import { AppRouter } from "@/types/Route";
 import React from "react";
 
-const otherPage = React.lazy(() => import("@/pages/other"));
-const otherCreatePage = React.lazy(() => import("@/pages/other/create"));
-const otherDetailPage = React.lazy(() => import("@/pages/other/detail"));
+const OtherPage = React.lazy(() => import("@/pages/other"));
+const OtherCreatePage = React.lazy(() => import("@/pages/other/create"));
+const OtherDetailPage = React.lazy(() => import("@/pages/other/detail"));
 
 export const OTHER: AppRouter = {
   INDEX: {
@@ -11,14 +11,14 @@ export const OTHER: AppRouter = {
     text: "Other 1",
     showMenu: true,
     icon: "/images/toast/warning-toast.png",
-    element: otherPage,
+    element: <OtherPage />,
     group: "Others",
   },
   CREATE: {
     path: "/others-1/create",
     text: "Other 1 create",
     showMenu: false,
-    element: otherCreatePage,
+    element: <OtherCreatePage />,
     group: "Others",
   },
   DETAIL: {
@@ -26,7 +26,7 @@ export const OTHER: AppRouter = {
     text: "Other 1 detail",
     showMenu: false,
     group: "Others",
-    element: otherDetailPage,
+    element: <OtherDetailPage />,
   },
 };
 const OTHER_ROUTES = Object.values(OTHER);
