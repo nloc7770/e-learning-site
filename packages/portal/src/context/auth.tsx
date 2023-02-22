@@ -1,13 +1,13 @@
 import { useToast } from "@/context/toast";
 import { supabaseClient } from "@/services/supabase";
 import { User } from "@supabase/supabase-js";
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type State = {
     user: User | null
     logout: () => void
+    login: (email: string, password: string) => void
     loading: boolean
-    isLogged: boolean
 }
 
 interface AuthProviderProps {
@@ -33,35 +33,66 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     }
     useEffect(() => {
-        getUserData();
-        // Check active sessions and sets the user
-        // Listen for changes on auth state (logged in, signed out, etc.)
-        const { data: listener } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
-            setUser(session?.user ?? null)
-        })
-        setLoading(false)
+        setLoading(true);
+        const getUser = async () => {
+            const { data } = await supabaseClient.auth.getUser();
+            const { user: currentUser } = data;
+            setUser(currentUser ?? null);
+            setLoading(false);
+        };
+        getUser();
+        const { data } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            if (event === "SIGNED_IN") {
+                setUser(session?.user ?? null);
+            } else if (event === "SIGNED_OUT") {
+                setUser(null);
+            }
+        });
         return () => {
-            listener?.subscription?.unsubscribe()
-        }
-    }, [])
-
-    const isLogged = useMemo(() => {
-        return !!user
-    }, [user])
+            data.subscription.unsubscribe();
+        };
+    }, []);
+    // const isLogged = useMemo(() => {
+    //     return !!user
+    // }, [user])
 
     const logout = async () => {
         await supabaseClient.auth.signOut();
+    }
+    const login = async (email: string, password: string) => {
+
+        if (!password || !email) {
+            return toggleToast({
+                show: true,
+                status: "fail",
+                message: "Thiếu thông tin đăng nhập",
+                time: 5000,
+            });
+        }
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        })
+        if (error) {
+            return toggleToast({
+                show: true,
+                status: "fail",
+                message: error?.message,
+                time: 5000,
+            });
+        }
     }
     return (
         <AuthContext.Provider
             value={{
                 user,
                 loading,
-                isLogged,
+                // isLogged,
+                login,
                 logout,
             }}
         >
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }
